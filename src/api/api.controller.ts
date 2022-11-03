@@ -1,12 +1,19 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { ApiService } from './api.service';
 
 @Controller('api')
 export class ApiController {
-  constructor(private readonly apiService: ApiService) {}
+  constructor(
+    private readonly apiService: ApiService,
+    private readonly prismaService: PrismaService,
+  ) {}
 
-  @Get('/rand')
-  getRandomNumber(): number {
-    return this.apiService.getRandomNumber();
+  @Get('/products')
+  async getProductById() {
+    return (await this.prismaService.products.findMany({})).map((p) => {
+      delete p.id;
+      return p;
+    });
   }
 }

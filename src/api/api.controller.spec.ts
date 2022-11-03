@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaService } from '../prisma/prisma.service';
 import { ApiController } from './api.controller';
 import { ApiService } from './api.service';
 
@@ -8,7 +9,7 @@ describe('ApiController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApiController],
-      providers: [ApiService],
+      providers: [ApiService, PrismaService],
     }).compile();
 
     controller = module.get<ApiController>(ApiController);
@@ -16,9 +17,5 @@ describe('ApiController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
-  });
-
-  it('should return random integer number', () => {
-    expect(controller.getRandomNumber()).not.toBeNaN();
   });
 });
