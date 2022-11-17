@@ -8,8 +8,18 @@ datasource db {
 }
 
 model products {
-  id         String @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  popularity Int
-  price      Int
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  category       String
+  categoryUrl    String
+  currency       String?
+  name           String
+  numberOfOffers Int
+  position       Int
+  price          Float
+  thumbnail      String
+  url            String
+}
+
+model test {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 }

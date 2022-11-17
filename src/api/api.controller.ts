@@ -1,19 +1,19 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiService } from './api.service';
+import { GetProductsDto } from './dto/getProducts.dto';
 
 @Controller('api')
 export class ApiController {
-  constructor(
-    private readonly apiService: ApiService,
-    private readonly prismaService: PrismaService,
-  ) {}
+  constructor(private readonly apiService: ApiService) {}
 
   @Get('/products')
-  async getProductById() {
-    return (await this.prismaService.products.findMany({})).map((p) => {
-      delete p.id;
-      return p;
-    });
+  async getProductByCategory(@Query() dto: GetProductsDto) {
+    return this.apiService.getProductsByCategory(dto.category);
+  }
+
+  @Get('/categories')
+  async getCategories() {
+    return this.apiService.getCategories();
   }
 }
