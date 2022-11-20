@@ -9,3 +9,8 @@ export interface IProduct {
   url: string;
   thumbnail: string;
 }
+
+export interface ICategory {
+  category: string;
+  count: number;
+}
