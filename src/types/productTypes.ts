@@ -1,13 +1,16 @@
 export interface IProduct {
+  product_id: string;
+  refreshed_at: Date;
   position: number;
   category: string;
-  categoryUrl: string;
   name: string;
-  price: number;
-  currency: string;
-  numberOfOffers: number;
   url: string;
+  rating?: number;
+  reviewCount?: number;
   thumbnail: string;
+  price: number;
+  currency?: string;
+  numberOfOffers: number;
 }
 
 export interface ICategory {

@@ -94,19 +94,7 @@ export class ScraperService {
       { resultsSelector, department },
     );
 
-    
-
     await browser.close();
-
-    const products = await this.prismaService.products.createMany({
-      data: content.map(prod => ({
-        ...prod,
-        product_id: `${prod.category}_${prod.position}`,
-        refreshed_at: new Date(),
-      })),
-    });
-
-    console.log(`Stworzono ${products.count} produktów`);
 
     return content;
   }
