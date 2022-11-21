@@ -6,9 +6,12 @@ import {
 import { connectToURL } from '../utils/webScraperUtils';
 
 import { amazonURLs } from '../consts/amazonURLs';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ScraperService {
+  constructor(private readonly prismaService: PrismaService) {}
+
   async fetchAmazonDepartmentBestsellers(department: AmazonCategoryType) {
     const { page, browser } = await connectToURL(amazonURLs[department]);
 
@@ -65,7 +68,7 @@ export class ScraperService {
           const price =
             lastRowEl.querySelector(priceSelectorPath)?.textContent || null;
 
-          const currency = price?.at(0) || "";
+          const currency = price?.at(0) || '';
 
           const numberOfOffers =
             lastRowEl
@@ -80,7 +83,7 @@ export class ScraperService {
             thumbnail,
             rating: rating ? Number(rating) : null,
             reviewCount: reviewCount
-              ? Number(reviewCount.replace(/,/gi, '.'))
+              ? Number(reviewCount.replace(/,/gi, ''))
               : null,
             price: price ? Number(price.replace('$', '')) : null,
             numberOfOffers: Number(numberOfOffers),
@@ -91,9 +94,19 @@ export class ScraperService {
       { resultsSelector, department },
     );
 
-    console.log(content);
+    
 
     await browser.close();
+
+    const products = await this.prismaService.products.createMany({
+      data: content.map(prod => ({
+        ...prod,
+        product_id: `${prod.category}_${prod.position}`,
+        refreshed_at: new Date(),
+      })),
+    });
+
+    console.log(`Stworzono ${products.count} produktów`);
 
     return content;
   }

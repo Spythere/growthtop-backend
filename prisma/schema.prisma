@@ -8,16 +8,19 @@ datasource db {
 }
 
 model products {
-  id             String  @id @default(auto()) @map("_id") @db.ObjectId
-  category       String
-  categoryUrl    String
-  currency       String?
-  name           String
-  numberOfOffers Int
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  product_id     String   @unique
+  refreshed_at   DateTime
   position       Int
-  price          Float
-  thumbnail      String
+  category       String
+  name           String
   url            String
+  rating         Float?
+  reviewCount    Int?
+  thumbnail      String
+  price          Float
+  currency       String?
+  numberOfOffers Int
 }
 
 model test {
