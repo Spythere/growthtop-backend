@@ -14,7 +14,7 @@ export class ScraperService {
     page: puppeteer.Page,
     department: AmazonCategoryType,
   ) {
-    await page.goto(amazonURLs[department]);
+    await page.goto(amazonURLs[department].url);
 
     const resultsSelector = '#gridItemRoot';
     await page.waitForSelector(resultsSelector);

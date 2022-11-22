@@ -3,6 +3,7 @@ export interface IProduct {
   refreshed_at: Date;
   position: number;
   category: string;
+  category_name: string;
   name: string;
   url: string;
   rating?: number;

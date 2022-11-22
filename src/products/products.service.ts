@@ -1,11 +1,14 @@
 import { Model } from 'mongoose';
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Product } from './interfaces/product.interface';
 import { IProduct } from '../types/productTypes';
 import { IAmazonBestseller } from '../types/amazonScraperTypes';
+import { amazonURLs } from '../consts/amazonURLs';
 
 @Injectable()
 export class ProductService {
+  private readonly logger = new Logger(ProductService.name);
+
   constructor(
     @Inject('PRODUCT_MODEL')
     private productModel: Model<Product>,
@@ -29,6 +32,7 @@ export class ProductService {
             category: '$category',
           },
           category: { $first: '$category' },
+          category_name: { $first: '$category_name' },
           count: { $sum: 1 },
         },
       },
@@ -43,6 +47,7 @@ export class ProductService {
   async createOrUpdateProducts(products: IAmazonBestseller[]) {
     const productsData: IProduct[] = products.map((prod) => ({
       ...prod,
+      category_name: amazonURLs[prod.category].name,
       product_id: `${prod.category}_${prod.position}`,
       refreshed_at: new Date(),
     }));
@@ -83,6 +88,6 @@ export class ProductService {
       Promise.resolve([0, 0]),
     );
 
-    console.log(`Added: ${createdCount}; Updated: ${updatedCount}`);
+    this.logger.log(`Added: ${createdCount}; Updated: ${updatedCount}`);
   }
 }

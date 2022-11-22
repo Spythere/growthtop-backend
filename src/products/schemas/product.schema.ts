@@ -9,6 +9,7 @@ export const ProductSchema = new mongoose.Schema({
   refreshed_at: Date,
   position: Number,
   category: String,
+  category_name: String,
   name: String,
   url: String,
   rating: Number,

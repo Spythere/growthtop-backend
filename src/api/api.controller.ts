@@ -14,7 +14,11 @@ export class ApiController {
   })
   @Get('/products')
   async getProductByCategory(@Query() dto: GetProductsDto) {
-    return this.apiService.getProductsByCategory(dto.category);
+    console.log(dto.category.replace(/_/g, ' '));
+
+    return this.apiService.getProductsByCategory(
+      dto.category.replace(/_/g, ' '),
+    );
   }
 
   @ApiResponse({

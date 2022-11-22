@@ -5,6 +5,7 @@ export interface Product extends Document {
   readonly refreshed_at: Date;
   readonly position: number;
   readonly category: string;
+  readonly category_name: string;
   readonly name: string;
   readonly url: string;
   readonly rating?: number;

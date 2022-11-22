@@ -30,6 +30,8 @@ export class ScraperController implements OnModuleInit {
     this.logger.log('Scraping data from amazon.com (US)...');
 
     for (let category in amazonURLs) {
+      products.length = 0;
+
       this.logger.log(`Currently scraping: ${category}`);
 
       try {
@@ -44,6 +46,10 @@ export class ScraperController implements OnModuleInit {
         );
 
         products.push(...categoryProducts);
+
+        this.logger.log(`Updating ${category} products in DB...`);
+        await this.productService.createOrUpdateProducts(products);
+        this.logger.log('Products in DB successfully updated!');
       } catch (error) {
         this.logger.error(
           `Error occurred when trying to scrap ${category} category!`,
@@ -58,9 +64,5 @@ export class ScraperController implements OnModuleInit {
 
     browser.close();
     this.logger.log('Scraping data has ended!');
-
-    this.logger.log('Updating products in DB...');
-    await this.productService.createOrUpdateProducts(products);
-    this.logger.log('Products in DB successfully updated!');
   }
 }
