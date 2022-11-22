@@ -5,6 +5,7 @@ import {
   AmazonCategoryType,
   IAmazonBestseller,
 } from '../types/amazonScraperTypes';
+import { createBrowser } from '../utils/webScraperUtils';
 
 import { ScraperService } from './scraper.service';
 
@@ -24,6 +25,8 @@ export class ScraperController implements OnModuleInit {
   async fetchPageData() {
     const products: IAmazonBestseller[] = [];
 
+    const { browser, page } = await createBrowser();
+
     this.logger.log('Scraping data from amazon.com (US)...');
 
     for (let category in amazonURLs) {
@@ -32,6 +35,7 @@ export class ScraperController implements OnModuleInit {
       try {
         const categoryProducts =
           await this.scraperService.fetchAmazonDepartmentBestsellers(
+            page,
             category as AmazonCategoryType,
           );
 
@@ -52,7 +56,9 @@ export class ScraperController implements OnModuleInit {
       );
     }
 
+    browser.close();
     this.logger.log('Scraping data has ended!');
+
 
     this.logger.log('Updating products in DB...');
     await this.productService.createOrUpdateProducts(products);

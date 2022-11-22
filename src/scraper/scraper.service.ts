@@ -3,15 +3,18 @@ import {
   AmazonCategoryType,
   IAmazonBestseller,
 } from '../types/amazonScraperTypes';
-import { connectToURL } from '../utils/webScraperUtils';
 
 import { amazonURLs } from '../consts/amazonURLs';
 
+import * as puppeteer from 'puppeteer';
+
 @Injectable()
 export class ScraperService {
-
-  async fetchAmazonDepartmentBestsellers(department: AmazonCategoryType) {
-    const { page, browser } = await connectToURL(amazonURLs[department]);
+  async fetchAmazonDepartmentBestsellers(
+    page: puppeteer.Page,
+    department: AmazonCategoryType,
+  ) {
+    await page.goto(amazonURLs[department]);
 
     const resultsSelector = '#gridItemRoot';
     await page.waitForSelector(resultsSelector);
@@ -89,8 +92,6 @@ export class ScraperService {
       },
       { resultsSelector, department },
     );
-
-    await browser.close();
 
     return content;
   }
