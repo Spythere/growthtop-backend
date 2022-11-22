@@ -1,7 +1,9 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { ApiService } from './api.service';
 import { GetProductsDto } from './dto/getProducts.dto';
+import { GetCategoriesResponse } from './responses/getCategories.response';
+import { GetProductsResponse } from './responses/getProducts.response';
 
 @ApiTags('api')
 @Controller('api')
@@ -11,11 +13,10 @@ export class ApiController {
   @ApiResponse({
     status: 200,
     description: 'Returns all products with specified category.',
+    type: [GetProductsResponse],
   })
   @Get('/products')
   async getProductByCategory(@Query() dto: GetProductsDto) {
-    console.log(dto.category.replace(/_/g, ' '));
-
     return this.apiService.getProductsByCategory(
       dto.category.replace(/_/g, ' '),
     );
@@ -24,6 +25,7 @@ export class ApiController {
   @ApiResponse({
     status: 200,
     description: 'Returns all categories and item count of each of them',
+    type: [GetCategoriesResponse],
   })
   @Get('/categories')
   async getCategories() {
