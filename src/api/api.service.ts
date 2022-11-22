@@ -12,4 +12,8 @@ export class ApiService {
   async getCategories() {
     return this.productsService.findCategories();
   }
+
+  async getSuggestions(query: string) {
+    return (await this.productsService.findSuggestions(query)).map(s => s.category_name);
+  }
 }

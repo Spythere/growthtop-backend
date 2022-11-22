@@ -31,4 +31,13 @@ export class ApiController {
   async getCategories() {
     return this.apiService.getCategories();
   }
+
+  @ApiResponse({
+    status: 200,
+    description: 'Returns categories suggestions for entered query string',
+  })
+  @Get('/suggestions')
+  async getSuggestions(@Query('query') query: string) {
+    return this.apiService.getSuggestions(query);
+  }
 }

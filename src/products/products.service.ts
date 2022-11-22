@@ -26,7 +26,7 @@ export class ProductService {
       [],
       {
         sort: {
-          position: 1
+          position: 1,
         },
       },
     );
@@ -46,15 +46,36 @@ export class ProductService {
       },
       {
         $sort: {
-          category_name: 1
-        }
+          category_name: 1,
+        },
       },
       {
         $project: {
           _id: 0,
         },
       },
-      
+    ]);
+  }
+
+  async findSuggestions(query: string): Promise<{ category_name: string; }[]> {
+    return this.productModel.aggregate([
+      { $match: { category_name: new RegExp('^' + query, 'i') } },
+      {
+        $group: {
+          _id: '$category_name',
+          category_name: { $first: '$category_name' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+      {
+        $sort: {
+          category_name: 1,
+        },
+      },
     ]);
   }
 
