@@ -19,7 +19,7 @@ export class ScraperController implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.fetchPageData();
+    if (process.env.NODE_ENV === 'development') this.fetchPageData();
   }
 
   async fetchPageData() {
@@ -58,7 +58,6 @@ export class ScraperController implements OnModuleInit {
 
     browser.close();
     this.logger.log('Scraping data has ended!');
-
 
     this.logger.log('Updating products in DB...');
     await this.productService.createOrUpdateProducts(products);
