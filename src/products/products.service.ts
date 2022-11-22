@@ -19,9 +19,17 @@ export class ProductService {
   }
 
   async findByCategory(category: string) {
-    return this.productModel.find({
-      category,
-    });
+    return this.productModel.find(
+      {
+        category,
+      },
+      [],
+      {
+        sort: {
+          position: 1
+        },
+      },
+    );
   }
 
   async findCategories() {
@@ -37,10 +45,16 @@ export class ProductService {
         },
       },
       {
+        $sort: {
+          category_name: 1
+        }
+      },
+      {
         $project: {
           _id: 0,
         },
       },
+      
     ]);
   }
 
