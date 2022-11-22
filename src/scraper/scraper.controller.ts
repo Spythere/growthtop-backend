@@ -16,7 +16,7 @@ export class ScraperController {
     private readonly scraperService: ScraperService,
     private readonly productService: ProductService,
   ) {
-    // this.fetchPageData();
+    this.fetchPageData();
   }
 
   async fetchPageData() {
