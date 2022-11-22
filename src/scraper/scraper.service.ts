@@ -6,11 +6,9 @@ import {
 import { connectToURL } from '../utils/webScraperUtils';
 
 import { amazonURLs } from '../consts/amazonURLs';
-import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ScraperService {
-  constructor(private readonly prismaService: PrismaService) {}
 
   async fetchAmazonDepartmentBestsellers(department: AmazonCategoryType) {
     const { page, browser } = await connectToURL(amazonURLs[department]);

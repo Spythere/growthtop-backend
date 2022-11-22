@@ -1,6 +1,5 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PrismaService } from '../prisma/prisma.service';
 import { ApiService } from './api.service';
 import { GetProductsDto } from './dto/getProducts.dto';
 

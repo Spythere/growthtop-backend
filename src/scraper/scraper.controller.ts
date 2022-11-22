@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { amazonURLs } from '../consts/amazonURLs';
-import { PrismaService } from '../prisma/prisma.service';
+import { ProductService } from '../products/products.service';
 import {
   AmazonCategoryType,
   IAmazonBestseller,
@@ -12,7 +12,7 @@ import { ScraperService } from './scraper.service';
 export class ScraperController {
   constructor(
     private readonly scraperService: ScraperService,
-    private readonly prismaService: PrismaService,
+    private readonly productService: ProductService,
   ) {
     this.fetchPageData();
   }
@@ -20,23 +20,17 @@ export class ScraperController {
   async fetchPageData() {
     const products: IAmazonBestseller[] = [];
 
-    for (let category in amazonURLs) {
-      const categoryProducts =
-        await this.scraperService.fetchAmazonDepartmentBestsellers(
-          category as AmazonCategoryType,
-        );
+    // for (let category in amazonURLs) {
+    const categoryProducts =
+      await this.scraperService.fetchAmazonDepartmentBestsellers(
+        'Electronics' as AmazonCategoryType,
+      );
 
-      console.log(`Pobrano produkty dla kategorii "${category}"`);
+    // console.log(`Pobrano produkty dla kategorii "${category}"`);
 
-      products.push(...categoryProducts);
-    }
+    products.push(...categoryProducts);
+    // }
 
-    this.prismaService.createOrUpdateProducts(
-      products.map((prod) => ({
-        ...prod,
-        product_id: `${prod.category}_${prod.position}`,
-        refreshed_at: new Date(),
-      })),
-    );
+    this.productService.createOrUpdateProducts(products);
   }
 }
