@@ -5,9 +5,7 @@ const databaseProviders = [
   {
     provide: 'DATABASE_CONNECTION',
     useFactory: (): Promise<typeof mongoose> =>
-      mongoose.connect(
-        'mongodb+srv://spythere:IFiClmDJEblJOJqd@cluster0.ecluflj.mongodb.net/growthtop',
-      ),
+      mongoose.connect(process.env.DATABASE_URL),
   },
 ];
 
