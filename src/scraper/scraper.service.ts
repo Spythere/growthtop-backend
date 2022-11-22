@@ -16,8 +16,6 @@ export class ScraperService {
     const resultsSelector = '#gridItemRoot';
     await page.waitForSelector(resultsSelector);
 
-    console.log('Pobrano zawartość!');
-
     const content: IAmazonBestseller[] = await page.evaluate(
       ({ resultsSelector, department }) => {
         return [...document.querySelectorAll(resultsSelector)].map((item) => {

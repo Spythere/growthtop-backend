@@ -83,6 +83,6 @@ export class ProductService {
       Promise.resolve([0, 0]),
     );
 
-    console.log(`Dodano: ${createdCount}; Zaktualizowano: ${updatedCount}`);
+    console.log(`Added: ${createdCount}; Updated: ${updatedCount}`);
   }
 }

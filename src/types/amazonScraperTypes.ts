@@ -1,4 +1,6 @@
-export type AmazonCategoryType = 'Books' | 'Electronics' | 'Apps & Games';
+import { amazonURLs } from "../consts/amazonURLs";
+
+export type AmazonCategoryType = keyof typeof amazonURLs;
 
 export interface IAmazonBestseller {
   position: number;
