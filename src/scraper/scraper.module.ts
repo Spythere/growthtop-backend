@@ -9,4 +9,10 @@ import { ScraperService } from './scraper.service';
   providers: [ScraperService, ProductService],
   imports: [ProductsModule]
 })
-export class ScraperModule {}
+export class ScraperModule {
+
+
+  onModuleInit() {
+    
+  }
+}

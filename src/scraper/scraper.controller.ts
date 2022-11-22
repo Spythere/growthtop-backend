@@ -1,4 +1,4 @@
-import { Controller, Logger } from '@nestjs/common';
+import { Controller, Logger, OnModuleInit } from '@nestjs/common';
 import { amazonURLs } from '../consts/amazonURLs';
 import { ProductService } from '../products/products.service';
 import {
@@ -9,13 +9,15 @@ import {
 import { ScraperService } from './scraper.service';
 
 @Controller('scraper')
-export class ScraperController {
+export class ScraperController implements OnModuleInit {
   private readonly logger = new Logger(ScraperController.name);
 
   constructor(
     private readonly scraperService: ScraperService,
     private readonly productService: ProductService,
-  ) {
+  ) {}
+
+  onModuleInit() {
     this.fetchPageData();
   }
 
