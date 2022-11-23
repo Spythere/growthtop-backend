@@ -19,8 +19,7 @@ export class ScraperController implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    // if (process.env.NODE_ENV === 'development') 
-    this.fetchPageData();
+    if (process.env.NODE_ENV === 'development') this.fetchPageData();
   }
 
   async fetchPageData() {
