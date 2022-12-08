@@ -7,6 +7,7 @@ import { ScraperModule } from './scraper/scraper.module';
 import { DatabaseModule } from './database/database.module';
 import { ProductsModule } from './products/products.module';
     import { ConfigModule } from '@nestjs/config';
+import { CategoriesModule } from './categories/categories.module';
 
 
 @Module({
@@ -19,6 +20,7 @@ import { ProductsModule } from './products/products.module';
     ScraperModule,
     DatabaseModule,
     ProductsModule,
+    CategoriesModule
   ],
 })
 export class AppModule {}

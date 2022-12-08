@@ -1,11 +1,10 @@
 import { Document } from 'mongoose';
 
-export interface Product extends Document {
+export interface IProduct {
   readonly product_id: string;
   readonly refreshed_at: Date;
   readonly position: number;
-  readonly category: string;
-  readonly category_name: string;
+  readonly category_id: string;
   readonly name: string;
   readonly url: string;
   readonly rating?: number;
@@ -14,4 +13,7 @@ export interface Product extends Document {
   readonly price: number;
   readonly currency?: string;
   readonly numberOfOffers: number;
+  readonly credibility: number;
 }
+
+export interface IProductDoc extends Document, IProduct {}

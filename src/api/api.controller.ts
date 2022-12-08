@@ -1,9 +1,7 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiQuery, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import { Controller, Get, Query } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiService } from './api.service';
 import { GetProductsDto } from './dto/getProducts.dto';
-import { GetCategoriesResponse } from './responses/getCategories.response';
-import { GetProductsResponse } from './responses/getProducts.response';
 
 @ApiTags('api')
 @Controller('api')
@@ -13,7 +11,6 @@ export class ApiController {
   @ApiResponse({
     status: 200,
     description: 'Returns all products with specified category.',
-    type: [GetProductsResponse],
   })
   @Get('/products')
   async getProductByCategory(@Query() dto: GetProductsDto) {
@@ -24,20 +21,36 @@ export class ApiController {
 
   @ApiResponse({
     status: 200,
-    description: 'Returns all categories and item count of each of them',
-    type: [GetCategoriesResponse],
+    description: 'Returns all categories info',
   })
   @Get('/categories')
   async getCategories() {
-    return this.apiService.getCategories();
+    const categories = await this.apiService.getCategories();
+
+    let maxCred = 1;
+    for (let category of categories) {
+      if (category.credibility > maxCred) maxCred = category.credibility;
+    }
+
+    const mappedCategories = categories.reduce((acc, cat) => {
+      acc.push({
+        category: cat.name,
+        category_name: cat.display_name,
+        credibility: ((cat.credibility / maxCred) * 100),
+      });
+
+      return acc;
+    }, []);
+
+    return mappedCategories;
   }
 
-  @ApiResponse({
-    status: 200,
-    description: 'Returns categories suggestions for entered query string',
-  })
-  @Get('/suggestions')
-  async getSuggestions(@Query('query') query: string) {
-    return this.apiService.getSuggestions(query);
-  }
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Returns categories suggestions for entered query string',
+  // })
+  // @Get('/suggestions')
+  // async getSuggestions(@Query('query') query: string) {
+  //   return this.apiService.getSuggestions(query);
+  // }
 }

@@ -1,10 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
-import axios from 'axios';
-import { HttpService } from '@nestjs/axios';
+import { Controller } from '@nestjs/common';
 
 @Controller()
-export class AppController {
-  constructor(private readonly httpService: HttpService) {
-  }
-}
+export class AppController {}

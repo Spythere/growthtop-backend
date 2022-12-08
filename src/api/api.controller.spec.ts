@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../prisma/prisma.service';
+import { ProductsModule } from '../products/products.module';
+import { ProductService } from '../products/products.service';
 import { ApiController } from './api.controller';
 import { ApiService } from './api.service';
+import { mockProducts } from './mockResources/mockProducts';
 
 describe('ApiController', () => {
   let controller: ApiController;
@@ -9,7 +11,16 @@ describe('ApiController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApiController],
-      providers: [ApiService, PrismaService],
+      providers: [
+        ApiService,
+        {
+          provide: ProductService,
+          useValue: {
+            findAll: jest.fn().mockResolvedValue(mockProducts),
+          },
+        },
+      ],
+      imports: [ProductsModule]
     }).compile();
 
     controller = module.get<ApiController>(ApiController);

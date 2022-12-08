@@ -18,4 +18,5 @@ export interface IAmazonBestseller {
   currency: string;
 
   numberOfOffers: number;
+  credibility: number;
 }

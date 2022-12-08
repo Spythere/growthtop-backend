@@ -6,10 +6,13 @@ export const ProductSchema = new mongoose.Schema({
     unique: true
   },
   
+  category_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category'
+  },
+
   refreshed_at: Date,
   position: Number,
-  category: String,
-  category_name: String,
   name: String,
   url: String,
   rating: Number,
@@ -17,5 +20,6 @@ export const ProductSchema = new mongoose.Schema({
   thumbnail: String,
   price: Number,
   currency: String,
-  numberOfOffers: Number
+  numberOfOffers: Number,
+  credibility: Number
 });

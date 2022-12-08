@@ -1,9 +1,8 @@
 import { Model } from 'mongoose';
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { Product } from './interfaces/product.interface';
-import { IProduct } from '../types/productTypes';
+import { IProduct, IProductDoc } from './interfaces/product.interface';
 import { IAmazonBestseller } from '../types/amazonScraperTypes';
-import { amazonURLs } from '../consts/amazonURLs';
+import { ICategoryDoc } from '../categories/interfaces/category.interface';
 
 @Injectable()
 export class ProductService {
@@ -11,17 +10,25 @@ export class ProductService {
 
   constructor(
     @Inject('PRODUCT_MODEL')
-    private productModel: Model<Product>,
+    private productModel: Model<IProductDoc>,
+    @Inject('CATEGORY_MODEL')
+    private categoryModel: Model<ICategoryDoc>,
   ) {}
 
-  async findAll(): Promise<Product[]> {
+  async findAll(): Promise<IProductDoc[]> {
     return this.productModel.find().exec();
   }
 
-  async findByCategory(category: string) {
+  async findByCategory(categoryName: string) {
+    const category = await this.categoryModel.findOne({
+      name: categoryName,
+    });
+
+    if (!category) return [];
+
     return this.productModel.find(
       {
-        category,
+        category_id: category._id,
       },
       [],
       {
@@ -32,59 +39,15 @@ export class ProductService {
     );
   }
 
-  async findCategories() {
-    return this.productModel.aggregate([
-      {
-        $group: {
-          _id: {
-            category: '$category',
-          },
-          category: { $first: '$category' },
-          category_name: { $first: '$category_name' },
-          count: { $sum: 1 },
-        },
-      },
-      {
-        $sort: {
-          category_name: 1,
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-        },
-      },
-    ]);
-  }
-
-  async findSuggestions(query: string): Promise<{ category_name: string; }[]> {
-    return this.productModel.aggregate([
-      { $match: { category_name: new RegExp('^' + query, 'i') } },
-      {
-        $group: {
-          _id: '$category_name',
-          category_name: { $first: '$category_name' },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-        },
-      },
-      {
-        $sort: {
-          category_name: 1,
-        },
-      },
-    ]);
-  }
-
-  async createOrUpdateProducts(products: IAmazonBestseller[]) {
+  async updateCategoryProducts(
+    categoryId: string,
+    products: IAmazonBestseller[],
+  ) {
     const productsData: IProduct[] = products.map((prod) => ({
       ...prod,
-      category_name: amazonURLs[prod.category].name,
       product_id: `${prod.category}_${prod.position}`,
       refreshed_at: new Date(),
+      category_id: categoryId,
     }));
 
     const productsIds = productsData.map((p) => p.product_id);
